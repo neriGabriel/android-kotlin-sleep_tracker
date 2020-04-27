@@ -22,24 +22,48 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 
+/*
+    DEFINO MINHA INTERFACE => ELA É QUEM VAI CONTROLAR MINHAS OPERACOES DE BD
+*/
 @Dao
 interface SleepDatabaseDao {
 
+    /*
+        @Insert => tag pré-definida para executar um comando de insert, parametro obrigatório é uma entidade
+        da classe em questão
+    */
     @Insert
     fun insert(night: SleepNight)
 
+    /*
+        @Update => tag pré-definida para executar um comando de update, parametro obrigatório é uma entidade
+        da classe em questão
+    */
     @Update
     fun update(night: SleepNight)
 
+    /*
+        @Query => tag utilziada para executar uma determinada query, parametro obrigatório é a query
+     */
     @Query("SELECT * FROM daily_sleep_quality_table WHERE nightId = :key")
     fun get(key: Long): SleepNight
 
+    /*
+        @Query => tag utilziada para executar uma determinada query, parametro obrigatório é a query
+     */
     @Query("DELETE FROM daily_sleep_quality_table")
     fun clear()
 
+    /*
+        @Query => tag utilziada para executar uma determinada query, parametro obrigatório é a query
+     */
     @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC")
     fun getAllNights(): LiveData<List<SleepNight>>
 
+
+    /*
+        @Query => tag utilziada para executar uma determinada query, parametro obrigatório é a query
+    */
     @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC LIMIT 1")
     fun getTonight(): SleepNight?
 }
