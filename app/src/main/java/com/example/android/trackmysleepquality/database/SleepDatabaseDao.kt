@@ -46,7 +46,7 @@ interface SleepDatabaseDao {
         @Query => tag utilziada para executar uma determinada query, parametro obrigatório é a query
      */
     @Query("SELECT * FROM daily_sleep_quality_table WHERE nightId = :key")
-    fun get(key: Long): SleepNight
+    fun get(key: Long): SleepNight?
 
     /*
         @Query => tag utilziada para executar uma determinada query, parametro obrigatório é a query
