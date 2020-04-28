@@ -27,6 +27,8 @@ import kotlinx.coroutines.*
 
 /**
  * ViewModel for SleepTrackerFragment.
+ * pega a database e a application context por parametro
+ * e transforma a application em propriedade
  */
 class SleepTrackerViewModel(
         val database: SleepDatabaseDao,
@@ -37,6 +39,9 @@ class SleepTrackerViewModel(
         VAMOS USAR COROUTINES
     */
 
+    /*
+        O job nos permite parar a coroutine em execução
+    */
     private var viewModelJob = Job()
 
     override fun onCleared() {
@@ -44,6 +49,10 @@ class SleepTrackerViewModel(
         viewModelJob.cancel()
     }
 
+    /*
+        Define qual thread a coroutine irá rodar
+        Dispatchers.Main = o scopo de ui dessa coroutine irá ser executada na main thread
+    */
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     private var tonight = MutableLiveData<SleepNight?>()
@@ -75,8 +84,15 @@ class SleepTrackerViewModel(
         }
     }
 
+    /*
+    *   PATTERN = PADRÃO DE PROJETOS
+    *   funcao que executa uma acao dentro de uma CoroutineScope
+    * */
     // ========== LIKE A PATTERN =================== //
     fun onStartTracking() {
+        /*
+            definimos o scopo e executamos a coroutine sem bloquear a thread atual
+        */
         uiScope.launch {
             val newNight = SleepNight()
 
@@ -86,6 +102,9 @@ class SleepTrackerViewModel(
         }
     }
 
+    /*
+        suspend => função executada dentro da coroutine sem bloquear o processo
+    */
     private suspend fun insert(night: SleepNight) {
         withContext(Dispatchers.IO) {
             database.insert(night)
